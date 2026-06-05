@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wynajmij Pojazd</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5" style="max-width: 30rem;">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0" th:text="'Wynajem: ' + ${car.brand} + ' ' + ${car.model}"></h4>
+            </div>
+            <div class="card-body">
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                <p class="text-muted" th:text="'Cena za dobę: ' + ${car.pricePerDay} + ' PLN'"></p>
+                
+                <form th:action="@{/rentals/car/{id}(id=${car.id})}" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Data rozpoczęcia</label>
+                        <input type="date" name="startDate" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Data zakończenia</label>
+                        <input type="date" name="endDate" class="form-control" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Potwierdzam wypożyczenie</button>
+                        <a th:href="@{/cars}" class="btn btn-outline-secondary">Anuluj</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

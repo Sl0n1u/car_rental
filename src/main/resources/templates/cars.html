@@ -11,6 +11,7 @@
         <div class="container">
             <span class="navbar-brand mb-0 h1">Wypożyczalnia Aut</span>
             <form th:action="@{/logout}" method="post" class="d-flex">
+                <a th:href="@{/rentals/my}" class="btn btn-outline-info btn-sm me-2">Moje Wypożyczenia</a>
                 <button class="btn btn-outline-light btn-sm" type="submit">Wyloguj się</button>
             </form>
         </div>
@@ -31,6 +32,7 @@
                             <th>Model</th>
                             <th>Silnik</th>
                             <th>Cena za dobę</th>
+                            <th>Akcja</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,6 +44,9 @@
                             <td th:text="${car.model}">Model</td>
                             <td th:text="${car.engineDetails}">Silnik</td>
                             <td><span th:text="${car.pricePerDay}"></span> PLN</td>
+                            <td>
+                                <a th:href="@{/rentals/car/{id}(id=${car.id})}" class="btn btn-primary btn-sm">Wypożycz</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
