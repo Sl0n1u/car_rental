@@ -22,8 +22,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll() // Publiczne ścieżki
-                .anyRequest().authenticated() // Wszystko inne wymaga zalogowania
+                .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/cars/add").hasRole("ADMIN") // Tylko użytkownicy z rolą ADMIN wejdą na formularz
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login") // Wskazanie na nasz przyszły kontroler widoku logowania
