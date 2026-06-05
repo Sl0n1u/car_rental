@@ -60,15 +60,22 @@
                     </thead>
                     <tbody>
                         <tr th:if="${cars.isEmpty()}">
-                            <td colspan="4" class="text-center py-4 text-muted">Obecnie brak pojazdów w naszej flocie.</td>
+                            <td colspan="5" class="text-center py-4 text-muted">Obecnie brak pojazdów w naszej flocie.</td>
                         </tr>
+                        
                         <tr th:each="car : ${cars}">
                             <td th:text="${car.brand}">Marka</td>
                             <td th:text="${car.model}">Model</td>
                             <td th:text="${car.engineDetails}">Silnik</td>
                             <td><span th:text="${car.pricePerDay}"></span> PLN</td>
+                            
                             <td>
-                                <a th:href="@{/rentals/car/{id}(id=${car.id})}" class="btn btn-primary btn-sm">Wypożycz</a>
+                                <a th:if="${searchStartDate != null and searchEndDate != null}" 
+                                th:href="@{/rentals/car/{id}(id=${car.id}, startDate=${searchStartDate}, endDate=${searchEndDate})}" 
+                                class="btn btn-primary btn-sm">Wypożycz</a>
+                                
+                                <span th:unless="${searchStartDate != null and searchEndDate != null}" 
+                                    class="text-muted small">Wybierz terminy u góry</span>
                             </td>
                         </tr>
                     </tbody>

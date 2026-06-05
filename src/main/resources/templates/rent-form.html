@@ -2,30 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Wynajmij Pojazd</title>
+    <title>Potwierdzenie Wynajmu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-    <div class="container mt-5" style="max-width: 30rem;">
+    <div class="container mt-5" style="max-width: 35rem;">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0" th:text="'Wynajem: ' + ${car.brand} + ' ' + ${car.model}"></h4>
+                <h4 class="mb-0">Podsumowanie Rezerwacji</h4>
             </div>
             <div class="card-body">
                 <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-                <p class="text-muted" th:text="'Cena za dobę: ' + ${car.pricePerDay} + ' PLN'"></p>
+                
+                <h5 th:text="${car.brand} + ' ' + ${car.model}"></h5>
+                <p class="text-muted border-bottom pb-3" th:text="'Silnik: ' + ${car.engineDetails} + ' | ' + ${car.pricePerDay} + ' PLN/doba'"></p>
+                
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Odbiór:</span>
+                        <strong th:text="${startDate}"></strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Zwrot:</span>
+                        <strong th:text="${endDate}"></strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Liczba dni:</span>
+                        <strong th:text="${days}"></strong>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <span class="fs-5">Do zapłaty:</span>
+                        <strong class="fs-5 text-success" th:text="${totalPrice} + ' PLN'"></strong>
+                    </li>
+                </ul>
                 
                 <form th:action="@{/rentals/car/{id}(id=${car.id})}" method="post">
-                    <div class="mb-3">
-                        <label class="form-label">Data rozpoczęcia</label>
-                        <input type="date" name="startDate" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Data zakończenia</label>
-                        <input type="date" name="endDate" class="form-control" required>
-                    </div>
+                    <input type="hidden" name="startDate" th:value="${startDate}">
+                    <input type="hidden" name="endDate" th:value="${endDate}">
+                    
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Potwierdzam wypożyczenie</button>
+                        <button type="submit" class="btn btn-success btn-lg">Potwierdzam rezerwację</button>
                         <a th:href="@{/cars}" class="btn btn-outline-secondary">Anuluj</a>
                     </div>
                 </form>

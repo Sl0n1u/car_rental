@@ -36,19 +36,17 @@ public class CarWebController {
         
         List<Car> cars;
 
-        // Jeśli użytkownik wpisał obie daty, filtrujemy
+        // Dodatkowe sprawdzenie, czy daty nie są nullami
         if (startDate != null && endDate != null) {
             if (endDate.isBefore(startDate) || startDate.isBefore(LocalDate.now())) {
                 model.addAttribute("error", "Wybrano niepoprawny zakres dat.");
-                cars = carRepository.findAll(); // w razie błędu pokaż wszystko
+                cars = carRepository.findAll();
             } else {
                 cars = carRepository.findAvailableCars(startDate, endDate);
-                // Przekazujemy daty z powrotem do widoku, żeby zapamiętać je w formularzu
                 model.addAttribute("searchStartDate", startDate);
                 model.addAttribute("searchEndDate", endDate);
             }
         } else {
-            // Jeśli nie wyszukiwał, pokazujemy całą flotę
             cars = carRepository.findAll();
         }
 

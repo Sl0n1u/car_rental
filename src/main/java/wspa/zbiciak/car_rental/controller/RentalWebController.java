@@ -32,11 +32,34 @@ public class RentalWebController {
 
     // 1. Formularz wyboru dat dla konkretnego auta
     @GetMapping("/car/{carId}")
-    public String showRentForm(@PathVariable Long carId, Model model) {
+    public String showRentForm(@PathVariable Long carId, 
+                               @RequestParam(required = false) String startDate, 
+                               @RequestParam(required = false) String endDate, 
+                               Model model) {
+        
+        // Zabezpieczenie na wypadek, gdyby ktoś wpisał adres z palca bez dat
+        if (startDate == null || endDate == null) {
+            return "redirect:/cars"; 
+        }
+
         Car car = carRepository.findById(carId)
                 .orElseThrow(() -> new IllegalArgumentException("Niepoprawne ID auta: " + carId));
-        
+
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+
+        // Wyliczamy dni i cenę już tutaj
+        long days = ChronoUnit.DAYS.between(start, end);
+        if (days <= 0) days = 1;
+        BigDecimal totalPrice = car.getPricePerDay().multiply(BigDecimal.valueOf(days));
+
+        // Przekazujemy wszystko do nowego widoku podsumowania
         model.addAttribute("car", car);
+        model.addAttribute("startDate", start);
+        model.addAttribute("endDate", end);
+        model.addAttribute("days", days);
+        model.addAttribute("totalPrice", totalPrice);
+
         return "rent-form";
     }
 

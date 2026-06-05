@@ -13,7 +13,7 @@ import java.util.List;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     // Wyciąga tylko te auta, które NIE mają nakładających się rezerwacji w podanym terminie
-    @Query("SELECT c FROM Car c WHERE c.id NOT IN (" +
-           "SELECT r.car.id FROM Rental r WHERE r.startDate <= :endDate AND r.endDate >= :startDate)")
+    @Query("SELECT c FROM Car c WHERE NOT EXISTS (" +
+           "SELECT r FROM Rental r WHERE r.car = c AND r.startDate <= :endDate AND r.endDate >= :startDate)")
     List<Car> findAvailableCars(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }
