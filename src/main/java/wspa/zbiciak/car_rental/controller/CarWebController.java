@@ -1,6 +1,8 @@
 package wspa.zbiciak.car_rental.controller;
 
 import jakarta.validation.Valid;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,9 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import wspa.zbiciak.car_rental.model.Car;
 import wspa.zbiciak.car_rental.repository.CarRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -24,8 +29,29 @@ public class CarWebController {
     }
 
     @GetMapping
-    public String showCarsList(Model model) {
-        List<Car> cars = carRepository.findAll();
+    public String showCarsList(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
+        
+        List<Car> cars;
+
+        // Jeśli użytkownik wpisał obie daty, filtrujemy
+        if (startDate != null && endDate != null) {
+            if (endDate.isBefore(startDate) || startDate.isBefore(LocalDate.now())) {
+                model.addAttribute("error", "Wybrano niepoprawny zakres dat.");
+                cars = carRepository.findAll(); // w razie błędu pokaż wszystko
+            } else {
+                cars = carRepository.findAvailableCars(startDate, endDate);
+                // Przekazujemy daty z powrotem do widoku, żeby zapamiętać je w formularzu
+                model.addAttribute("searchStartDate", startDate);
+                model.addAttribute("searchEndDate", endDate);
+            }
+        } else {
+            // Jeśli nie wyszukiwał, pokazujemy całą flotę
+            cars = carRepository.findAll();
+        }
+
         model.addAttribute("cars", cars);
         return "cars";
     }

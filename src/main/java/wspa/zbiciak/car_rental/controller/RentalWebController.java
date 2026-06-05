@@ -48,28 +48,33 @@ public class RentalWebController {
                                 Model model) {
         
         Car car = carRepository.findById(carId).orElseThrow();
-        
-        // Pobranie zalogowanego użytkownika
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         AppUser user = userRepository.findByUsername(currentUsername).orElseThrow();
 
         LocalDate start = LocalDate.parse(startStr);
         LocalDate end = LocalDate.parse(endStr);
 
-        // Ryzyko formalne: Walidacja dat
+        // 1. Walidacja logiczna samych dat (czy koniec nie jest przed początkiem)
         if (end.isBefore(start) || start.isBefore(LocalDate.now())) {
             model.addAttribute("car", car);
             model.addAttribute("error", "Wybrano niepoprawne daty!");
             return "rent-form";
         }
 
-        // Obliczanie dni i ceny (minimum 1 dzień)
+        // 2. NOWOŚĆ: Walidacja dostępności auta w bazie danych
+        boolean isOccupied = rentalRepository.existsOverlappingRental(carId, start, end);
+        if (isOccupied) {
+            model.addAttribute("car", car);
+            model.addAttribute("error", "Wybrany pojazd jest już zarezerwowany w tym terminie! Wybierz inne daty.");
+            return "rent-form";
+        }
+
+        // 3. Obliczenia i zapis (bez zmian)
         long days = ChronoUnit.DAYS.between(start, end);
         if (days <= 0) days = 1;
 
         BigDecimal totalPrice = car.getPricePerDay().multiply(BigDecimal.valueOf(days));
 
-        // Zapis do bazy
         Rental rental = new Rental();
         rental.setCar(car);
         rental.setAppUser(user);

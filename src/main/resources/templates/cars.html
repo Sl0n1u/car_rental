@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Nasza Flota - Wypożyczalnia</title>
@@ -20,7 +21,29 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Dostępne samochody</h2>
-            <a th:href="@{/cars/add}" class="btn btn-success">Dodaj nowe auto</a>
+            <a th:if="${searchStartDate != null}" th:href="@{/cars}" class="btn btn-outline-secondary btn-sm ms-3">Wyczyść wyszukiwanie</a>
+            <a th:href="@{/cars/add}" class="btn btn-success" sec:authorize="hasRole('ADMIN')">Dodaj nowe auto</a>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body bg-white rounded">
+                <form th:action="@{/cars}" method="get" class="row align-items-end g-3">
+                    <div class="col-md-4">
+                        <label for="startDate" class="form-label fw-bold">Odbiór:</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control" 
+                               th:value="${searchStartDate}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="endDate" class="form-label fw-bold">Zwrot:</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" 
+                               th:value="${searchEndDate}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Sprawdź dostępność</button>
+                    </div>
+                </form>
+                <div th:if="${error}" class="text-danger mt-2 text-center fw-bold" th:text="${error}"></div>
+            </div>
         </div>
 
         <div class="card shadow-sm">
