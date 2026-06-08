@@ -23,7 +23,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/cars/add").hasRole("ADMIN") // Tylko użytkownicy z rolą ADMIN wejdą na formularz
+                .requestMatchers("/cars/add", "/rentals/all", "/rentals/confirm/**", "/rentals/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

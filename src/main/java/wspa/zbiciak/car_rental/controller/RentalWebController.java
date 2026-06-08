@@ -119,4 +119,26 @@ public class RentalWebController {
         model.addAttribute("rentals", myRentals);
         return "my-rentals";
     }
+
+    // --- PANEL ADMINISTRATORA ---
+
+    @GetMapping("/all")
+    public String showAllRentalsAdmin(Model model) {
+        model.addAttribute("rentals", rentalRepository.findAll());
+        return "admin-rentals";
+    }
+
+    @PostMapping("/confirm/{id}")
+    public String confirmRental(@PathVariable Long id) {
+        Rental rental = rentalRepository.findById(id).orElseThrow();
+        rental.setStatus("ZATWIERDZONY");
+        rentalRepository.save(rental);
+        return "redirect:/rentals/all";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteRental(@PathVariable Long id) {
+        rentalRepository.deleteById(id);
+        return "redirect:/rentals/all";
+    }
 }

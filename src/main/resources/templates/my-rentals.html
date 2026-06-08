@@ -9,6 +9,7 @@
     <nav class="navbar navbar-dark bg-dark mb-4">
         <div class="container">
             <span class="navbar-brand mb-0 h1">Profil Użytkownika</span>
+            <a th:href="@{/rentals/all}" class="btn btn-outline-warning btn-sm me-2" sec:authorize="hasRole('ADMIN')">Zarządzaj Wynajmami</a>
             <a th:href="@{/cars}" class="btn btn-outline-light btn-sm">Powrót do floty</a>
         </div>
     </nav>
@@ -22,6 +23,7 @@
                         <th>Od</th>
                         <th>Do</th>
                         <th>Koszt całkowity</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +35,10 @@
                         <td th:text="${rental.startDate}">Od</td>
                         <td th:text="${rental.endDate}">Do</td>
                         <td><strong th:text="${rental.totalPrice}"></strong> PLN</td>
+                        <td>
+                            <span th:if="${rental.status == 'OCZEKUJE'}" class="badge bg-warning text-dark">Oczekiwana na potwierdzenie</span>
+                            <span th:if="${rental.status == 'ZATWIERDZONY'}" class="badge bg-success">Zatwierdzona</span>
+                        </td>
                     </tr>
                 </tbody>
             </table>

@@ -2,9 +2,12 @@ package wspa.zbiciak.car_rental.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import jakarta.validation.Valid;
 import wspa.zbiciak.car_rental.model.AppUser;
 import wspa.zbiciak.car_rental.service.UserService;
 
@@ -30,15 +33,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String processRegistration(@ModelAttribute("user") AppUser user, Model model) {
-        boolean isRegistered = userService.registerNewUser(user);
-        
-        if (!isRegistered) {
-            model.addAttribute("error", "Użytkownik o takiej nazwie już istnieje!");
-            return "register"; // Zwracamy z powrotem do formularza z błędem
+    public String processRegistration(@Valid @ModelAttribute("user") AppUser user, BindingResult bindingResult, Model model) {
+        // 1. Sprawdzamy czy formularz spełnia wymogi (np. poprawność emaila)
+        if (bindingResult.hasErrors()) {
+            return "register";
         }
         
-        // Po sukcesie przekierowujemy na stronę logowania z flagą "registered"
+        // 2. Logika zapisu
+        boolean isRegistered = userService.registerNewUser(user);
+        if (!isRegistered) {
+            model.addAttribute("error", "Użytkownik o takiej nazwie lub emailu już istnieje!");
+            return "register";
+        }
+        
         return "redirect:/login?registered";
     }
 }

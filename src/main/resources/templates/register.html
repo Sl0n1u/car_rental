@@ -20,6 +20,16 @@
                 <label for="password" class="form-label">Hasło</label>
                 <input type="password" id="password" th:field="*{password}" class="form-control" required>
             </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Adres Email</label>
+                <input type="email" id="email" th:field="*{email}" class="form-control" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Numer telefonu</label>
+                <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control" th:errorclass="is-invalid">
+                <div class="invalid-feedback" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+            </div>
             <button type="submit" class="btn btn-success w-100">Zarejestruj się</button>
         </form>
         <div class="text-center mt-3">

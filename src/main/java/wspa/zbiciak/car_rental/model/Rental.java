@@ -30,4 +30,7 @@ public class Rental {
 
     @Column(nullable = false)
     private BigDecimal totalPrice;
+
+    @Column(nullable = false)
+    private String status = "OCZEKUJE";
 }

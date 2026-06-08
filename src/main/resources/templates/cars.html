@@ -12,6 +12,7 @@
         <div class="container">
             <span class="navbar-brand mb-0 h1">Wypożyczalnia Aut</span>
             <form th:action="@{/logout}" method="post" class="d-flex">
+                <a th:href="@{/rentals/all}" class="btn btn-outline-warning btn-sm me-2" sec:authorize="hasRole('ADMIN')">Zarządzaj Wynajmami</a>
                 <a th:href="@{/rentals/my}" class="btn btn-outline-info btn-sm me-2">Moje Wypożyczenia</a>
                 <button class="btn btn-outline-light btn-sm" type="submit">Wyloguj się</button>
             </form>
