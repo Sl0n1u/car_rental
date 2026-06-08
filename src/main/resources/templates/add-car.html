@@ -1,53 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Dodaj Pojazd - Wypożyczalnia</title>
+    <title>Dodaj Pojazd - AUTEX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-dark bg-dark mb-4 border-bottom border-danger border-3">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Panel Zarządzania Flotą</span>
-            <a th:href="@{/cars}" class="btn btn-outline-light btn-sm">Powrót do listy</a>
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/cars}">
+                <img th:src="@{/images/Autex.png}" alt="AUTEX Logo" height="45" class="d-inline-block align-top rounded shadow-sm">
+            </a>
+            
+            <form th:action="@{/logout}" method="post" class="d-flex align-items-center mb-0">
+                <a th:href="@{/cars/add}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">+ Dodaj nowe auto</a>
+                <a th:href="@{/rentals/all}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">Panel Administratora</a>
+                <a th:href="@{/rentals/my}" class="btn btn-outline-light btn-sm me-3">Moje Wypożyczenia</a>
+                <button class="btn btn-dark border-secondary btn-sm fw-bold" type="submit">Wyloguj</button>
+            </form>
         </div>
     </nav>
 
     <div class="container d-flex justify-content-center">
-        <div class="card shadow" style="width: 35rem;">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Dodaj nowy samochód do bazy</h4>
+        <div class="card shadow border-0 border-top border-danger border-4" style="width: 35rem;">
+            <div class="card-header bg-dark text-white text-center py-3">
+                <h4 class="mb-0 fw-bold">DODAJ NOWY POJAZD</h4>
             </div>
-            <div class="card-body">
+            <div class="card-body p-4">
                 <form th:action="@{/cars/add}" th:object="${car}" method="post">
                     
                     <div class="mb-3">
-                        <label for="brand" class="form-label">Marka</label>
+                        <label for="brand" class="form-label fw-bold">Marka</label>
                         <input type="text" id="brand" th:field="*{brand}" class="form-control" th:errorclass="is-invalid">
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="model" class="form-label">Model</label>
+                        <label for="model" class="form-label fw-bold">Model</label>
                         <input type="text" id="model" th:field="*{model}" class="form-control" th:errorclass="is-invalid">
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="engineDetails" class="form-label">Szczegóły silnika (opcjonalnie)</label>
+                        <label for="engineDetails" class="form-label fw-bold">Szczegóły silnika (opcjonalnie)</label>
                         <input type="text" id="engineDetails" th:field="*{engineDetails}" class="form-control" placeholder="np. 2.0 CVVT Hybrid">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="pricePerDay" class="form-label">Cena za dobę (PLN)</label>
+                    <div class="mb-4">
+                        <label for="pricePerDay" class="form-label fw-bold">Cena za dobę (PLN)</label>
                         <input type="number" id="pricePerDay" th:field="*{pricePerDay}" class="form-control" th:errorclass="is-invalid">
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('pricePerDay')}" th:errors="*{pricePerDay}"></div>
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-success">Zapisz pojazd w bazie</button>
-                        <a th:href="@{/cars}" class="btn btn-outline-secondary">Anuluj</a>
+                        <button type="submit" class="btn btn-danger btn-lg fw-bold">ZAPISZ POJAZD</button>
+                        <a th:href="@{/cars}" class="btn btn-outline-dark fw-bold">ANULUJ</a>
                     </div>
                 </form>
             </div>

@@ -2,17 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Odmowa Dostępu</title>
+    <title>Odmowa Dostępu - AUTEX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+<body class="bg-dark text-white d-flex align-items-center justify-content-center vh-100 border-top border-danger border-5">
     <div class="text-center">
-        <h1 class="display-1 fw-bold text-danger">403</h1>
-        <p class="fs-3"> <span class="text-danger">Brak uprawnień.</span></p>
-        <p class="lead">
-            Nie masz odpowiednich uprawnień, aby przeglądać tę stronę. Ta strefa jest tylko dla administratorów.
-        </p>
-        <a th:href="@{/cars}" class="btn btn-primary mt-3">Wróć do listy pojazdów</a>
+        
+        <img th:src="@{/images/Autex.png}" alt="AUTEX Logo" class="img-fluid rounded shadow mb-4" style="max-width: 150px;">
+        
+        <h1 class="display-1 fw-bold text-danger mb-0">403</h1>
+        <h2 class="fw-bold mb-4">BRAK UPRAWNIEŃ</h2>
+        <div class="bg-white text-dark p-4 rounded shadow-sm mb-4 mx-auto" style="max-width: 400px;">
+            <p class="mb-0 fw-bold">Ta strefa jest zarezerwowana wyłącznie dla autoryzowanego personelu AUTEX.</p>
+        </div>
+        <a th:href="@{/cars}" class="btn btn-danger btn-lg fw-bold px-5">WRÓĆ DO FLOTY</a>
     </div>
 </body>
 </html>

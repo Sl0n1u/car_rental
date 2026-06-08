@@ -22,13 +22,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                 .requestMatchers("/cars/add", "/rentals/all", "/rentals/confirm/**", "/rentals/delete/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") // Wskazanie na nasz przyszły kontroler widoku logowania
-                .defaultSuccessUrl("/cars", true) // Gdzie przekierować po sukcesie
+                .loginPage("/login")
+                .defaultSuccessUrl("/cars", true)
                 .permitAll()
             )
             .logout(logout -> logout

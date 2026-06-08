@@ -1,47 +1,57 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Moje Wypożyczenia</title>
+    <title>Moje Wypożyczenia - AUTEX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-dark bg-dark mb-4">
+
+    <nav class="navbar navbar-dark bg-dark mb-4 border-bottom border-danger border-3">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Profil Użytkownika</span>
-            <a th:href="@{/rentals/all}" class="btn btn-outline-warning btn-sm me-2" sec:authorize="hasRole('ADMIN')">Zarządzaj Wynajmami</a>
-            <a th:href="@{/cars}" class="btn btn-outline-light btn-sm">Powrót do floty</a>
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/cars}">
+                <img th:src="@{/images/Autex.png}" alt="AUTEX Logo" height="45" class="d-inline-block align-top rounded shadow-sm">
+            </a>
+            
+            <form th:action="@{/logout}" method="post" class="d-flex align-items-center mb-0">
+                <a th:href="@{/cars/add}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">+ Dodaj nowe auto</a>
+                <a th:href="@{/rentals/all}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">Panel Administratora</a>
+                <a th:href="@{/rentals/my}" class="btn btn-outline-light btn-sm me-3">Moje Wypożyczenia</a>
+                <button class="btn btn-dark border-secondary btn-sm fw-bold" type="submit">Wyloguj</button>
+            </form>
         </div>
     </nav>
+
     <div class="container">
-        <h2>Twoja historia wypożyczeń</h2>
-        <div class="card shadow-sm mt-3">
-            <table class="table table-striped m-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Samochód</th>
-                        <th>Od</th>
-                        <th>Do</th>
-                        <th>Koszt całkowity</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:if="${rentals.isEmpty()}">
-                        <td colspan="4" class="text-center py-4 text-muted">Nie wypożyczyłeś jeszcze żadnego auta.</td>
-                    </tr>
-                    <tr th:each="rental : ${rentals}">
-                        <td th:text="${rental.car.brand} + ' ' + ${rental.car.model}">Auto</td>
-                        <td th:text="${rental.startDate}">Od</td>
-                        <td th:text="${rental.endDate}">Do</td>
-                        <td><strong th:text="${rental.totalPrice}"></strong> PLN</td>
-                        <td>
-                            <span th:if="${rental.status == 'OCZEKUJE'}" class="badge bg-warning text-dark">Oczekiwana na potwierdzenie</span>
-                            <span th:if="${rental.status == 'ZATWIERDZONY'}" class="badge bg-success">Zatwierdzona</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <h2 class="fw-bold mb-3">Twoja historia wypożyczeń</h2>
+        
+        <div class="card shadow-sm border-0 border-top border-danger border-4">
+            <div class="card-body p-0 overflow-hidden rounded">
+                <table class="table table-striped table-hover m-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Samochód</th>
+                            <th>Termin</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Koszt całkowity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${rentals.isEmpty()}">
+                            <td colspan="4" class="text-center py-4 text-muted">Nie wypożyczyłeś jeszcze żadnego auta.</td>
+                        </tr>
+                        <tr th:each="rental : ${rentals}">
+                            <td class="fw-bold" th:text="${rental.car.brand} + ' ' + ${rental.car.model}">Auto</td>
+                            <td th:text="${rental.startDate} + ' do ' + ${rental.endDate}">Termin</td>
+                            <td>
+                                <span th:if="${rental.status == 'OCZEKUJE'}" class="badge bg-warning text-dark">Oczekuje</span>
+                                <span th:if="${rental.status == 'ZATWIERDZONY'}" class="badge bg-success">Zatwierdzony</span>
+                            </td>
+                            <td class="text-end pe-4"><strong class="fs-5 text-danger" th:text="${rental.totalPrice} + ' PLN'"></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>

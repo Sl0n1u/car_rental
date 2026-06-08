@@ -1,82 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Nasza Flota - Wypożyczalnia</title>
+    <title>Nasza Flota - AUTEX</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-dark bg-dark mb-4 border-bottom border-danger border-3">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Wypożyczalnia Aut</span>
-            <form th:action="@{/logout}" method="post" class="d-flex">
-                <a th:href="@{/rentals/all}" class="btn btn-outline-warning btn-sm me-2" sec:authorize="hasRole('ADMIN')">Zarządzaj Wynajmami</a>
-                <a th:href="@{/rentals/my}" class="btn btn-outline-info btn-sm me-2">Moje Wypożyczenia</a>
-                <button class="btn btn-outline-light btn-sm" type="submit">Wyloguj się</button>
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/cars}">
+                <img th:src="@{/images/Autex.png}" alt="AUTEX Logo" height="45" class="d-inline-block align-top rounded shadow-sm">
+            </a>
+            
+            <form th:action="@{/logout}" method="post" class="d-flex align-items-center mb-0">
+                <a th:href="@{/cars/add}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">+ Dodaj nowe auto</a>
+                <a th:href="@{/rentals/all}" class="btn btn-outline-danger btn-sm me-2 fw-bold" sec:authorize="hasRole('ADMIN')">Panel Administratora</a>
+                <a th:href="@{/rentals/my}" class="btn btn-outline-light btn-sm me-3">Moje Wypożyczenia</a>
+                <button class="btn btn-dark border-secondary btn-sm fw-bold" type="submit">Wyloguj</button>
             </form>
         </div>
     </nav>
 
     <div class="container">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Dostępne samochody</h2>
-            <a th:if="${searchStartDate != null}" th:href="@{/cars}" class="btn btn-outline-secondary btn-sm ms-3">Wyczyść wyszukiwanie</a>
-            <a th:href="@{/cars/add}" class="btn btn-success" sec:authorize="hasRole('ADMIN')">Dodaj nowe auto</a>
+            <h2 class="fw-bold">Dostępne samochody</h2>
+            <div>
+                <a th:if="${searchStartDate != null}" th:href="@{/cars}" class="btn btn-outline-dark btn-sm me-2">Wyczyść filtry</a>
+            </div>
         </div>
 
-        <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4 border-0 border-start border-danger border-4">
             <div class="card-body bg-white rounded">
                 <form th:action="@{/cars}" method="get" class="row align-items-end g-3">
                     <div class="col-md-4">
-                        <label for="startDate" class="form-label fw-bold">Odbiór:</label>
-                        <input type="date" id="startDate" name="startDate" class="form-control" 
-                               th:value="${searchStartDate}" required>
+                        <label for="startDate" class="form-label fw-bold text-muted">Odbiór:</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control" th:value="${searchStartDate}" required>
                     </div>
                     <div class="col-md-4">
-                        <label for="endDate" class="form-label fw-bold">Zwrot:</label>
-                        <input type="date" id="endDate" name="endDate" class="form-control" 
-                               th:value="${searchEndDate}" required>
+                        <label for="endDate" class="form-label fw-bold text-muted">Zwrot:</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" th:value="${searchEndDate}" required>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary w-100">Sprawdź dostępność</button>
+                        <button type="submit" class="btn btn-dark w-100 fw-bold">SPRAWDŹ DOSTĘPNOŚĆ</button>
                     </div>
                 </form>
                 <div th:if="${error}" class="text-danger mt-2 text-center fw-bold" th:text="${error}"></div>
             </div>
         </div>
 
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <table class="table table-striped table-hover m-0">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0 rounded overflow-hidden">
+                <table class="table table-striped table-hover m-0 align-middle">
                     <thead class="table-dark">
                         <tr>
                             <th>Marka</th>
                             <th>Model</th>
                             <th>Silnik</th>
                             <th>Cena za dobę</th>
-                            <th>Akcja</th>
+                            <th class="text-center">Akcja</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:if="${cars.isEmpty()}">
                             <td colspan="5" class="text-center py-4 text-muted">Obecnie brak pojazdów w naszej flocie.</td>
                         </tr>
-                        
                         <tr th:each="car : ${cars}">
-                            <td th:text="${car.brand}">Marka</td>
+                            <td class="fw-bold" th:text="${car.brand}">Marka</td>
                             <td th:text="${car.model}">Model</td>
                             <td th:text="${car.engineDetails}">Silnik</td>
-                            <td><span th:text="${car.pricePerDay}"></span> PLN</td>
-                            
-                            <td>
+                            <td><strong class="text-danger fs-5" th:text="${car.pricePerDay}"></strong> PLN</td>
+                            <td class="text-center">
                                 <a th:if="${searchStartDate != null and searchEndDate != null}" 
-                                th:href="@{/rentals/car/{id}(id=${car.id}, startDate=${searchStartDate}, endDate=${searchEndDate})}" 
-                                class="btn btn-primary btn-sm">Wypożycz</a>
+                                   th:href="@{/rentals/car/{id}(id=${car.id}, startDate=${searchStartDate}, endDate=${searchEndDate})}" 
+                                   class="btn btn-danger btn-sm fw-bold px-4">WYPOŻYCZ</a>
                                 
                                 <span th:unless="${searchStartDate != null and searchEndDate != null}" 
-                                    class="text-muted small">Wybierz terminy u góry</span>
+                                      class="text-muted small">Wybierz terminy u góry</span>
                             </td>
                         </tr>
                     </tbody>
